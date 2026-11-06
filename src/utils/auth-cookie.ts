@@ -1,5 +1,5 @@
 import type { Response } from 'express';
-import type { RequestWithCookies } from '../types/cookie';
+import type { RequestWithCookies } from '../types/cookie.ts';
 
 const COOKIE_NAME = 'token';
 

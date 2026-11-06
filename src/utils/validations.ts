@@ -1,4 +1,4 @@
-import { AppError } from './app-error';
+import { AppError } from './app-error.ts';
 
 export function validateRequiredString(value: unknown, field: string): string {
   if (typeof value !== 'string' || !value.trim()) {
