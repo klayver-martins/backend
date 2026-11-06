@@ -26,6 +26,10 @@ app.use('/uploads', express.static(path.resolve(process.cwd(), 'src/uploads')));
 
 app.use(routes);
 
+app.get('/health', (_req, res) => {
+  return res.status(200).send('ok');
+});
+
 app.use(errorMiddleware);
 
 export default app;
