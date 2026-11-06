@@ -3,9 +3,9 @@
 ## Backend
 
 - [x] Configuração do Node.js com TypeScript
-- [x] Configuração do Express 5
-- [x] Configuração do Prisma ORM 7
-- [x] Configuração do PostgreSQL 18 com Docker
+- [x] Configuração do Express
+- [x] Configuração do Prisma ORM
+- [x] Configuração do PostgreSQL com Docker
 - [x] Criação do banco de dados e migrations
 - [x] Configuração das variáveis de ambiente
 - [x] Estruturação do projeto em camadas (Controller, Service e Repository)
@@ -40,7 +40,6 @@
 
 ## Documentação
 
-- [x] Criar a `docs` da api
 - [x] Documentar endpoints de autenticação
 - [x] Documentar endpoints de produtos
 - [x] Configurar Swagger
