@@ -81,8 +81,8 @@
 - [x] Configurar variáveis de ambiente na Vercel
 - [x] Criar endpoint de verificação de funcionamento (`/health`)
 - [x] Disponibilizar API em ambiente de produção
-- [ ] Automatizar execução das migrations com GitHub Actions
-- [ ] Validar pipeline de migrations em produção
+- [x] Automatizar execução das migrations com GitHub Actions
+- [x] Validar pipeline de migrations em produção
 
 ## Finalização
 
@@ -91,5 +91,5 @@
 - [x] Revisar configuração do TypeScript
 - [x] Revisar README com instruções de instalação e execução
 - [x] Preparar configuração para deploy
-- [ ] Finalizar automação de CI/CD
+- [x] Finalizar automação de CI/CD
 - [x] Fazer deploy da API
