@@ -13,6 +13,11 @@
   "author": "",
   "license": "ISC",
   "type": "module",
+  "overrides": {
+    "swagger-jsdoc": {
+      "glob": "14.0.2"
+    }
+  },
   "devDependencies": {
     "@types/cookie-parser": "^1.4.10",
     "@types/cors": "^2.8.19",

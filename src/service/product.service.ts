@@ -5,6 +5,7 @@ import {
   productCreateSchema,
   productIdSchema,
   productUpdateSchema,
+  type ProductUpdateInput,
 } from '../schemas/product.schema.ts';
 
 import { AppError } from '../utils/app-error.ts';
@@ -45,7 +46,13 @@ export class ProductService {
 
   async update(id: number, input: unknown, userId: number) {
     const productId = productIdSchema.parse(id);
-    const data = productUpdateSchema.parse(input);
+
+    const parsedData = productUpdateSchema.parse(input);
+
+    // Remove propriedades que chegaram como undefined.
+    const data = Object.fromEntries(
+      Object.entries(parsedData).filter(([, value]) => value !== undefined),
+    ) as ProductUpdateInput;
 
     const product = await this.findById(productId, userId);
 

@@ -22,7 +22,7 @@ export const productUpdateSchema = z
     status: productFields.status.optional(),
     photo: productFields.photo.optional(),
   })
-  .refine(data => Object.keys(data).length > 0, {
+  .refine(data => Object.values(data).some(value => value !== undefined), {
     message: 'Informe pelo menos um campo para atualizar.',
   });
 
