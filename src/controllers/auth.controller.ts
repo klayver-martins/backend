@@ -46,6 +46,7 @@ export class AuthController {
   async me(req: Request, res: Response, next: NextFunction) {
     try {
       const user = await this.authService.me(res.locals.userId);
+
       return res.status(200).json(user);
     } catch (error) {
       return next(error);

@@ -1,7 +1,9 @@
 import type { AuthRepositoryInterface } from '../interfaces/repository/auth-repository.interface.ts';
-import type { LoginInput, UserInput } from '../interfaces/User.ts';
 import { AuthRepository } from '../repository/auth.repository.ts';
 import { AppError } from '../utils/app-error.ts';
+
+import { loginSchema } from '../schemas/login.schema.ts';
+import { registerSchema } from '../schemas/register.schema.ts';
 
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
@@ -9,49 +11,20 @@ import jwt from 'jsonwebtoken';
 export class AuthService {
   constructor(private authRepository: AuthRepositoryInterface = new AuthRepository()) {}
 
-  private validateEmail(value: unknown): string {
-    if (typeof value !== 'string' || !value.trim()) {
-      throw new AppError('E-mail é obrigatório.');
-    }
+  async register(input: unknown) {
+    const data = registerSchema.parse(input);
 
-    const email = value.trim().toLowerCase();
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-    if (!emailRegex.test(email)) {
-      throw new AppError('Informe um e-mail válido.');
-    }
-
-    return email;
-  }
-
-  async register(input: UserInput) {
-    if (typeof input.name !== 'string' || !input.name.trim()) {
-      throw new AppError('Nome é obrigatório.');
-    }
-
-    const name = input.name.trim();
-
-    if (typeof input.password !== 'string' || !input.password) {
-      throw new AppError('Senha é obrigatória.');
-    }
-
-    if (input.password.length < 4) {
-      throw new AppError('A senha deve ter pelo menos 4 caracteres.');
-    }
-
-    const email = this.validateEmail(input.email);
-
-    const existingUser = await this.authRepository.findByEmail(email);
+    const existingUser = await this.authRepository.findByEmail(data.email);
 
     if (existingUser) {
       throw new AppError('Este e-mail já está cadastrado.', 409);
     }
 
-    const passwordHash = await bcrypt.hash(input.password, 10);
+    const passwordHash = await bcrypt.hash(data.password, 10);
 
     const user = await this.authRepository.create({
-      name,
-      email,
+      name: data.name,
+      email: data.email,
       password: passwordHash,
     });
 
@@ -60,20 +33,16 @@ export class AuthService {
     return userWithoutPassword;
   }
 
-  async login(input: LoginInput) {
-    const email = this.validateEmail(input.email);
+  async login(input: unknown) {
+    const data = loginSchema.parse(input);
 
-    if (typeof input.password !== 'string' || !input.password) {
-      throw new AppError('Senha é obrigatória.');
-    }
-
-    const user = await this.authRepository.findByEmail(email);
+    const user = await this.authRepository.findByEmail(data.email);
 
     if (!user) {
       throw new AppError('E-mail ou senha inválidos.', 401);
     }
 
-    const passwordMatch = await bcrypt.compare(input.password, user.password);
+    const passwordMatch = await bcrypt.compare(data.password, user.password);
 
     if (!passwordMatch) {
       throw new AppError('E-mail ou senha inválidos.', 401);

@@ -1,94 +1,164 @@
-# TODO — API de Gerenciamento de Produtos
+# Backend — API de Gerenciamento de Produtos
 
-## Backend
+API REST desenvolvida com **Node.js, TypeScript e Express**, com autenticação JWT e gerenciamento de produtos. O projeto utiliza Prisma ORM para acesso ao banco de dados PostgreSQL e Zod para validação dos dados.
 
-- [x] Configuração do Node.js com TypeScript
-- [x] Configuração do Express
-- [x] Configuração do Prisma ORM
-- [x] Configuração do PostgreSQL com Docker
-- [x] Criação do banco de dados e migrations
-- [x] Configuração das variáveis de ambiente
-- [x] Estruturação do projeto em camadas (Controller, Service e Repository)
-- [x] Configuração do tratamento global de erros
-- [x] Configuração de CORS
-- [x] Configuração de cookies com Cookie Parser
-- [x] Configuração de arquivos estáticos para uploads
+## 🚀 Tecnologias
 
-## API de autenticação
+- **Node.js** — ambiente de execução.
+- **TypeScript** — tipagem estática.
+- **Express 5** — construção da API REST.
+- **PostgreSQL** — banco de dados relacional.
+- **Prisma 7** — ORM para comunicação com o banco de dados.
+- **Zod** — validação e tipagem dos dados de entrada.
+- **JWT** — autenticação baseada em tokens.
+- **Bcrypt** — criptografia de senhas.
+- **Multer** — upload de imagens.
+- **Swagger** — documentação da API.
+- **Vitest** — execução dos testes.
+- **Supertest** — testes de integração HTTP.
+- **Docker** — ambiente de desenvolvimento.
 
-- [x] Cadastro de usuários
-- [x] Login de usuários
-- [x] Criptografia de senhas com bcrypt
-- [x] Geração de JWT
-- [x] Autenticação via middleware
-- [x] Cookie HTTP-only para autenticação
-- [x] Logout
-- [x] Rota para consultar usuário autenticado (`/auth/me`)
-- [x] Validações dos dados de autenticação
+## 📌 Funcionalidades
 
-## API de produtos
+### Autenticação
 
-- [x] Cadastro de produtos
-- [x] Listagem de produtos
-- [x] Busca de produto por ID
-- [x] Atualização de produtos
-- [x] Exclusão de produtos
-- [x] Associação de produtos ao usuário autenticado
-- [x] Restrição de acesso aos produtos por usuário
-- [x] Upload opcional de imagens
-- [x] Validações de dados
+- Cadastro de usuários.
+- Login com e-mail e senha.
+- Autenticação utilizando JWT.
+- Consulta dos dados do usuário autenticado.
+- Logout.
 
-## Documentação
+### Produtos
 
-- [x] Documentar endpoints de autenticação
-- [x] Documentar endpoints de produtos
-- [x] Configurar Swagger
-- [x] Disponibilizar documentação interativa da API
-- [x] Conferir exemplos de requisições e respostas
+- Cadastro de produtos.
+- Listagem de produtos.
+- Busca de produto por ID.
+- Atualização de produtos.
+- Exclusão de produtos.
+- Associação dos produtos ao usuário autenticado.
+- Isolamento dos produtos por usuário.
 
-## Testes automatizados
+### Upload de imagens
 
-- [x] Instalar e configurar Vitest
-- [x] Instalar e configurar Supertest
-- [x] Criar testes unitários para Services
-- [x] Criar testes para Controllers
-- [x] Criar testes para Routes
-- [x] Testar cadastro e login
-- [x] Testar criação e listagem de produtos
-- [x] Testar atualização e exclusão
-- [x] Testar autenticação
-- [x] Testar middlewares
-- [x] Utilizar repositórios em memória para testes sem conexão com PostgreSQL
-- [x] Executar todos os testes com `npm run test:run`
-- [x] Validar todos os testes automatizados
+- Upload de imagens de produtos.
+- Suporte aos formatos JPEG, PNG e WEBP.
+- Limite de tamanho de arquivo de 5 MB.
 
-## Docker e banco de dados
+## 🏗️ Arquitetura
 
-- [x] Criar configuração `docker-compose.yml`
-- [x] Configurar container PostgreSQL
-- [x] Configurar persistência de dados com volume Docker
-- [x] Configurar healthcheck do PostgreSQL
-- [x] Configurar migrations com Prisma
-- [x] Configurar geração do Prisma Client
+O projeto utiliza uma arquitetura em camadas, separando as responsabilidades de cada parte da aplicação.
 
-## Deploy e infraestrutura
+```text
+src/
+├── controllers/
+├── interfaces/
+├── middlewares/
+├── repository/
+├── routes/
+├── schemas/
+├── services/
+├── utils/
+├── app.ts
+└── index.ts
+```
 
-- [x] Criar repositório no GitHub
-- [x] Configurar projeto na Vercel
-- [x] Configurar deploy da API na Vercel
-- [x] Configurar banco de dados PostgreSQL na Neon
-- [x] Configurar variáveis de ambiente na Vercel
-- [x] Criar endpoint de verificação de funcionamento (`/health`)
-- [x] Disponibilizar API em ambiente de produção
-- [x] Automatizar execução das migrations com GitHub Actions
-- [x] Validar pipeline de migrations em produção
+**Responsabilidades:**
 
-## Finalização
+- **Routes:** definição dos endpoints da API.
+- **Controllers:** recebem as requisições e enviam as respostas HTTP.
+- **Services:** concentram as regras de negócio e validações com Zod.
+- **Repositories:** responsáveis pelo acesso e manipulação dos dados.
+- **Middlewares:** autenticação, upload e tratamento de erros.
+- **Schemas:** definição dos schemas de validação.
+- **Utils:** funções auxiliares reutilizáveis.
+- **Interfaces:** contratos e definições de tipos.
 
-- [x] Revisar variáveis de ambiente
-- [x] Criar arquivo `.env.example`
-- [x] Revisar configuração do TypeScript
-- [x] Revisar README com instruções de instalação e execução
-- [x] Preparar configuração para deploy
-- [x] Finalizar automação de CI/CD
-- [x] Fazer deploy da API
+## ⚙️ Como executar o projeto
+
+### Pré-requisitos
+
+- Node.js
+- npm
+- PostgreSQL ou Docker
+- Git
+
+### 1. Clone o repositório
+
+```bash
+git clone https://github.com/klayver-martins/backend.git
+```
+
+### 2. Entre na pasta do projeto
+
+```bash
+cd backend
+```
+
+### 3. Instale as dependências
+
+```bash
+npm install
+```
+
+### 4. Configure as variáveis de ambiente
+
+Crie um arquivo `.env` na raiz do projeto:
+
+```env
+DATABASE_URL="sua_url_de_conexao_postgresql"
+JWT_SECRET="sua_chave_secreta"
+```
+
+### 5. Configure o banco de dados
+
+Execute os comandos de geração do Prisma Client e de migração conforme os scripts configurados no projeto.
+
+### 6. Inicie a aplicação
+
+Utilize o script de desenvolvimento configurado no `package.json`.
+
+## 📖 Documentação da API
+
+A documentação interativa da API está disponível através do Swagger:
+
+```text
+http://localhost:3000/api-docs
+```
+
+## 🧪 Testes
+
+Foram implementados testes unitários e testes de integração utilizando **Vitest** e **Supertest**.
+
+### Testes unitários
+
+Verificam as regras de negócio dos Services e o comportamento dos Controllers.
+
+- AuthService
+- AuthController
+- ProductService
+- ProductController
+
+### Testes de integração
+
+Validam o funcionamento das rotas e middlewares da aplicação.
+
+- AuthRoutes
+- ProductRoutes
+- Auth Middleware
+- Upload Middleware
+
+Para evitar dependência do banco de dados durante os testes, foram utilizados repositórios em memória.
+
+## 🔐 Segurança
+
+- Senhas armazenadas com hash utilizando Bcrypt.
+- Autenticação com JWT.
+- Validação dos dados de entrada com Zod.
+- Proteção das rotas privadas.
+- Isolamento dos produtos por usuário autenticado.
+
+## 👨‍💻 Autor
+
+**Klayver Martins**
+
+- GitHub: [@klayver-martins](https://github.com/klayver-martins)
