@@ -12,7 +12,7 @@ const cookieOptions = {
 };
 
 export function setAuthCookie(res: Response, token: string) {
-  res.cookie(COOKIE_NAME, token, cookieOptions);
+  res.cookie('token', token, cookieOptions);
 }
 
 export function getAuthCookie(req: RequestWithCookies) {
