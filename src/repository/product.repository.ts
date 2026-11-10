@@ -54,4 +54,14 @@ export class ProductRepository implements ProductRepositoryInterface {
 
     return result.count > 0;
   }
+
+  async findDashboard(userId: number) {
+    return prisma.product.groupBy({
+      by: ['status'],
+      where: { userId },
+      _count: {
+        _all: true,
+      },
+    });
+  }
 }

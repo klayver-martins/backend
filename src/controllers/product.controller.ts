@@ -77,4 +77,14 @@ export class ProductController {
       return next(error);
     }
   }
+
+  async findAllDashboard(req: Request, res: Response, next: NextFunction) {
+    try {
+      const dashboard = await this.productService.findDashboard(res.locals.userId);
+
+      return res.status(200).json(dashboard);
+    } catch (error) {
+      return next(error);
+    }
+  }
 }

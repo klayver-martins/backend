@@ -16,6 +16,8 @@ export function createProductRoutes(controller: ProductController = new ProductC
 
   productRoutes.get('/', (req, res, next) => controller.findAll(req, res, next));
 
+  productRoutes.get('/dashboard', (req, res, next) => controller.findAllDashboard(req, res, next));
+
   productRoutes.get('/:id', (req, res, next) => controller.findById(req, res, next));
 
   productRoutes.put('/:id', upload.single('photo'), (req, res, next) =>

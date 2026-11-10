@@ -39,6 +39,26 @@ export class ProductRepositoryInMemory {
       );
   }
 
+  async findDashboard(userId: number): Promise<
+    {
+      status: boolean;
+      _count: {
+        _all: number;
+      };
+    }[]
+  > {
+    const products = this.products.filter(product => product.userId === userId);
+
+    const activeProducts = products.filter(product => product.status === true).length;
+
+    const inactiveProducts = products.filter(product => product.status === false).length;
+
+    return [
+      ...(activeProducts > 0 ? [{ status: true, _count: { _all: activeProducts } }] : []),
+      ...(inactiveProducts > 0 ? [{ status: false, _count: { _all: inactiveProducts } }] : []),
+    ];
+  }
+
   async findById(id: number, userId: number): Promise<Product | null> {
     return this.products.find(product => product.id === id && product.userId === userId) ?? null;
   }

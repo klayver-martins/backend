@@ -83,4 +83,17 @@ export class ProductService {
 
     return true;
   }
+
+  async findDashboard(userId: number) {
+    const result = await this.productRepository.findDashboard(userId);
+
+    const activeProducts = result.find(item => item.status === true)?._count._all ?? 0;
+    const inactiveProducts = result.find(item => item.status === false)?._count._all ?? 0;
+
+    return {
+      totalProducts: activeProducts + inactiveProducts,
+      activeProducts,
+      inactiveProducts,
+    };
+  }
 }

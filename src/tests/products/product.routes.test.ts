@@ -93,6 +93,79 @@ describe('Product Routes', () => {
     expect(response.body[0].code).toBe('PROD-001');
   });
 
+  describe('GET /products/dashboard', () => {
+    it('deve retornar os indicadores do dashboard do usuário autenticado', async () => {
+      await repository.create(
+        {
+          code: 'PROD-001',
+          description: 'Notebook',
+          status: true,
+        },
+        1,
+      );
+
+      await repository.create(
+        {
+          code: 'PROD-002',
+          description: 'Mouse',
+          status: false,
+        },
+        1,
+      );
+
+      await repository.create(
+        {
+          code: 'PROD-003',
+          description: 'Teclado',
+          status: true,
+        },
+        2,
+      );
+
+      const response = await request(app)
+        .get('/products/dashboard')
+        .set('Cookie', createAuthCookie(1));
+
+      expect(response.status).toBe(200);
+
+      expect(response.body).toEqual({
+        totalProducts: 2,
+        activeProducts: 1,
+        inactiveProducts: 1,
+      });
+    });
+
+    it('deve retornar indicadores zerados quando o usuário não possui produtos', async () => {
+      const response = await request(app)
+        .get('/products/dashboard')
+        .set('Cookie', createAuthCookie(1));
+
+      expect(response.status).toBe(200);
+
+      expect(response.body).toEqual({
+        totalProducts: 0,
+        activeProducts: 0,
+        inactiveProducts: 0,
+      });
+    });
+
+    it('deve bloquear acesso ao dashboard sem token', async () => {
+      const response = await request(app).get('/products/dashboard');
+
+      expect(response.status).toBe(401);
+      expect(response.body.message).toBe('Token não informado.');
+    });
+
+    it('deve bloquear acesso ao dashboard com token inválido', async () => {
+      const response = await request(app)
+        .get('/products/dashboard')
+        .set('Cookie', 'token=token-invalido');
+
+      expect(response.status).toBe(401);
+      expect(response.body.message).toBe('Token inválido ou expirado.');
+    });
+  });
+
   it('deve cadastrar um produto', async () => {
     const response = await request(app).post('/products').set('Cookie', createAuthCookie()).send({
       code: 'PROD-001',

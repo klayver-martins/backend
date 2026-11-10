@@ -103,6 +103,74 @@ describe('ProductController', () => {
     expect(next).not.toHaveBeenCalled();
   });
 
+  describe('findAllDashboard', () => {
+    it('deve retornar os dados do dashboard e status 200', async () => {
+      const repository = new ProductRepositoryInMemory();
+      const service = new ProductService(repository);
+
+      await service.create(
+        {
+          code: 'PROD-001',
+          description: 'Notebook',
+          status: true,
+        },
+        1,
+      );
+
+      await service.create(
+        {
+          code: 'PROD-002',
+          description: 'Mouse',
+          status: false,
+        },
+        1,
+      );
+
+      await service.create(
+        {
+          code: 'PROD-003',
+          description: 'Teclado',
+          status: true,
+        },
+        2,
+      );
+
+      controller = new ProductController(service);
+
+      await controller.findAllDashboard(
+        {} as Request,
+        res as unknown as Response,
+        next as unknown as NextFunction,
+      );
+
+      expect(res.status).toHaveBeenCalledWith(200);
+
+      expect(res.json).toHaveBeenCalledWith({
+        totalProducts: 2,
+        activeProducts: 1,
+        inactiveProducts: 1,
+      });
+
+      expect(next).not.toHaveBeenCalled();
+    });
+
+    it('deve encaminhar erros do dashboard para o next', async () => {
+      const service = {
+        findDashboard: vi.fn().mockRejectedValue(new Error('Erro ao buscar dashboard.')),
+      };
+
+      controller = new ProductController(service as unknown as ProductService);
+
+      await controller.findAllDashboard(
+        {} as Request,
+        res as unknown as Response,
+        next as unknown as NextFunction,
+      );
+
+      expect(next).toHaveBeenCalledOnce();
+    });
+  });
+
   it('deve buscar um produto pelo ID e retornar status 200', async () => {
     const repository = new ProductRepositoryInMemory();
     const service = new ProductService(repository);

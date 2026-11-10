@@ -118,6 +118,102 @@ describe('ProductService', () => {
     });
   });
 
+  describe('findDashboard', () => {
+    it('deve retornar o total de produtos ativos e inativos do usuário', async () => {
+      await service.create(
+        {
+          code: 'PROD-001',
+          description: 'Notebook',
+          status: true,
+        },
+        userId,
+      );
+
+      await service.create(
+        {
+          code: 'PROD-002',
+          description: 'Mouse',
+          status: true,
+        },
+        userId,
+      );
+
+      await service.create(
+        {
+          code: 'PROD-003',
+          description: 'Teclado',
+          status: false,
+        },
+        userId,
+      );
+
+      await service.create(
+        {
+          code: 'PROD-004',
+          description: 'Monitor',
+          status: true,
+        },
+        2,
+      );
+
+      const dashboard = await service.findDashboard(userId);
+
+      expect(dashboard).toEqual({
+        totalProducts: 3,
+        activeProducts: 2,
+        inactiveProducts: 1,
+      });
+    });
+
+    it('deve retornar zero quando o usuário não possui produtos', async () => {
+      const dashboard = await service.findDashboard(userId);
+
+      expect(dashboard).toEqual({
+        totalProducts: 0,
+        activeProducts: 0,
+        inactiveProducts: 0,
+      });
+    });
+
+    it('deve retornar zero para produtos inativos quando todos estão ativos', async () => {
+      await service.create(
+        {
+          code: 'PROD-001',
+          description: 'Notebook',
+          status: true,
+        },
+        userId,
+      );
+
+      const dashboard = await service.findDashboard(userId);
+
+      expect(dashboard).toEqual({
+        totalProducts: 1,
+        activeProducts: 1,
+        inactiveProducts: 0,
+      });
+    });
+
+    it('deve retornar zero para produtos ativos quando todos estão inativos', async () => {
+      await service.create(
+        {
+          code: 'PROD-001',
+          description: 'Notebook',
+          status: false,
+        },
+        userId,
+      );
+
+      const dashboard = await service.findDashboard(userId);
+
+      expect(dashboard).toEqual({
+        totalProducts: 1,
+        activeProducts: 0,
+        inactiveProducts: 1,
+      });
+    });
+  });
+
   describe('findById', () => {
     it('deve buscar um produto pelo ID', async () => {
       const created = await service.create(

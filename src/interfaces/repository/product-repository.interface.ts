@@ -11,4 +11,13 @@ export interface ProductRepositoryInterface {
   update(id: number, userId: number, data: UpdateProductData): Promise<Product | null>;
 
   delete(id: number, userId: number): Promise<boolean>;
+
+  findDashboard(userId: number): Promise<
+    {
+      status: boolean;
+      _count: {
+        _all: number;
+      };
+    }[]
+  >;
 }
