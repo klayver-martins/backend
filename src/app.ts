@@ -13,7 +13,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: 'http://localhost:3000', // endereço do seu frontend
+    origin: process.env.URL_FRONTEND, // endereço do seu frontend
     credentials: true,
   }),
 );
