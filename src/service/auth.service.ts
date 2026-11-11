@@ -47,19 +47,22 @@ export class AuthService {
     return userWithoutPassword;
   }
 
-  private async createSession(userId: number) {
+  private createTokenPair(userId: number) {
     const accessToken = jwt.sign({ sub: userId }, getJwtSecret(), {
       expiresIn: ACCESS_TOKEN_TTL as jwt.SignOptions['expiresIn'],
     });
     const refreshToken = randomBytes(64).toString('hex');
+    return { accessToken, refreshToken };
+  }
 
+  private async createSession(userId: number) {
+    const tokens = this.createTokenPair(userId);
     await this.authRepository.createRefreshToken({
-      tokenHash: hashToken(refreshToken),
+      tokenHash: hashToken(tokens.refreshToken),
       userId,
       expiresAt: getRefreshTokenExpiration(),
     });
-
-    return { accessToken, refreshToken };
+    return tokens;
   }
 
   async login(input: unknown) {
@@ -97,14 +100,19 @@ export class AuthService {
       throw new AppError('Refresh token inválido ou expirado.', 401);
     }
 
-    const revoked = await this.authRepository.revokeRefreshToken(tokenHash, now);
+    const tokens = this.createTokenPair(storedToken.userId);
+    const rotated = await this.authRepository.rotateRefreshToken(tokenHash, now, {
+      tokenHash: hashToken(tokens.refreshToken),
+      userId: storedToken.userId,
+      expiresAt: getRefreshTokenExpiration(),
+    });
 
-    if (revoked !== 1) {
+    if (!rotated) {
       await this.authRepository.revokeAllRefreshTokens(storedToken.userId, now);
       throw new AppError('Refresh token reutilizado. Faça login novamente.', 401);
     }
 
-    return this.createSession(storedToken.userId);
+    return tokens;
   }
 
   async logout(refreshToken: string | undefined) {
