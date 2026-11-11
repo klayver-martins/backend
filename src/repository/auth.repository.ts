@@ -34,6 +34,24 @@ export class AuthRepository implements AuthRepositoryInterface {
     return result.count;
   }
 
+  async rotateRefreshToken(
+    oldTokenHash: string,
+    revokedAt: Date,
+    newToken: { tokenHash: string; userId: number; expiresAt: Date },
+  ) {
+    return prisma.$transaction(async transaction => {
+      const result = await transaction.refreshToken.updateMany({
+        where: { tokenHash: oldTokenHash, revokedAt: null, expiresAt: { gt: revokedAt } },
+        data: { revokedAt },
+      });
+
+      if (result.count !== 1) return false;
+
+      await transaction.refreshToken.create({ data: newToken });
+      return true;
+    });
+  }
+
   async revokeAllRefreshTokens(userId: number, revokedAt: Date) {
     await prisma.refreshToken.updateMany({
       where: { userId, revokedAt: null },
