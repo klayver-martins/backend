@@ -16,10 +16,12 @@ function durationToMilliseconds(value: string, fallback: number) {
 const accessMaxAge = durationToMilliseconds(process.env.ACCESS_TOKEN_TTL ?? '15m', 15 * 60 * 1000);
 const refreshMaxAge = Number(process.env.REFRESH_TOKEN_TTL_DAYS ?? 7) * 24 * 60 * 60 * 1000;
 
+const sameSite = (process.env.COOKIE_SAME_SITE ?? 'lax') as 'lax' | 'strict' | 'none';
+
 const baseCookieOptions = {
   httpOnly: true,
-  secure: process.env.NODE_ENV === 'production',
-  sameSite: 'lax' as const,
+  secure: process.env.NODE_ENV === 'production' || sameSite === 'none',
+  sameSite,
   path: '/',
 };
 
