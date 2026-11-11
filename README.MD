@@ -118,7 +118,15 @@ Execute os comandos de geração do Prisma Client e de migração conforme os sc
 
 Utilize o script de desenvolvimento configurado no `package.json`.
 
-### Fluxo de autenticação\n\n- `POST /auth/login`: define os cookies HTTP-only `token` (access, 15 minutos) e `refresh_token` (7 dias).\n- `POST /auth/refresh`: valida, revoga e substitui o refresh token; os novos tokens são enviados em cookies.\n- `POST /auth/logout`: revoga o refresh token atual e limpa os dois cookies.\n- O refresh token é armazenado no banco somente como hash SHA-256. Tokens de refresh antigos não podem ser reutilizados.\n- Configure `URL_FRONTEND`, `ACCESS_TOKEN_TTL`, `REFRESH_TOKEN_TTL_DAYS` e `COOKIE_SAME_SITE` no `.env`. Para sites diferentes, use `COOKIE_SAME_SITE=none` em HTTPS.\n\n## 📖 Documentação da API
+### Fluxo de autenticação
+
+- `POST /auth/login`: define os cookies HTTP-only `token` (access, 15 minutos) e `refresh_token` (7 dias).
+- `POST /auth/refresh`: valida, revoga e substitui o refresh token; os novos tokens são enviados em cookies.
+- `POST /auth/logout`: revoga o refresh token atual e limpa os dois cookies.
+- O refresh token é armazenado no banco somente como hash SHA-256. Tokens de refresh antigos não podem ser reutilizados.
+- Configure `URL_FRONTEND`, `ACCESS_TOKEN_TTL`, `REFRESH_TOKEN_TTL_DAYS` e `COOKIE_SAME_SITE` no `.env`. Para sites diferentes, use `COOKIE_SAME_SITE=none` em HTTPS.
+
+## 📖 Documentação da API
 
 A documentação interativa da API está disponível através do Swagger:
 
