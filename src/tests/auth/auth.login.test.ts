@@ -20,7 +20,8 @@ describe('AuthService - Login', () => {
 
     expect(result.user.email).toBe('joao@email.com');
     expect(result.user).not.toHaveProperty('password');
-    expect(result.token).toBeTruthy();
+    expect(result.accessToken).toBeTruthy();
+    expect(result.refreshToken).toBeTruthy();
   });
 
   it('não deve realizar login com e-mail inexistente', async () => {

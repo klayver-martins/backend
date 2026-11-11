@@ -26,7 +26,8 @@ API REST desenvolvida com **Node.js, TypeScript e Express**, com autenticação 
 - Login com e-mail e senha.
 - Autenticação utilizando JWT.
 - Consulta dos dados do usuário autenticado.
-- Logout.
+- Renovação de sessão com refresh token rotativo.
+- Revogação de sessões no logout.
 
 ### Produtos
 
@@ -116,6 +117,14 @@ Execute os comandos de geração do Prisma Client e de migração conforme os sc
 ### 6. Inicie a aplicação
 
 Utilize o script de desenvolvimento configurado no `package.json`.
+
+### Fluxo de autenticação
+
+- `POST /auth/login`: define os cookies HTTP-only `token` (access, 15 minutos) e `refresh_token` (7 dias).
+- `POST /auth/refresh`: valida, revoga e substitui o refresh token; os novos tokens são enviados em cookies.
+- `POST /auth/logout`: revoga o refresh token atual e limpa os dois cookies.
+- O refresh token é armazenado no banco somente como hash SHA-256. Tokens de refresh antigos não podem ser reutilizados.
+- Configure `URL_FRONTEND`, `ACCESS_TOKEN_TTL`, `REFRESH_TOKEN_TTL_DAYS` e `COOKIE_SAME_SITE` no `.env`. Para sites diferentes, use `COOKIE_SAME_SITE=none` em HTTPS.
 
 ## 📖 Documentação da API
 

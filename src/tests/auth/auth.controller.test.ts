@@ -94,7 +94,7 @@ describe('AuthController', () => {
     expect(res.json).toHaveBeenCalledWith(
       expect.objectContaining({
         message: 'Login realizado com sucesso.',
-        token: expect.any(String),
+        user: expect.objectContaining({ email: 'joao@email.com' }),
       }),
     );
     expect(next).not.toHaveBeenCalled();
