@@ -3,8 +3,18 @@ import type { RequestWithCookies } from '../types/cookie.ts';
 
 const ACCESS_COOKIE_NAME = 'token';
 const REFRESH_COOKIE_NAME = 'refresh_token';
-const ACCESS_MAX_AGE = 15 * 60 * 1000;
-const REFRESH_MAX_AGE = Number(process.env.REFRESH_TOKEN_TTL_DAYS ?? 7) * 24 * 60 * 60 * 1000;
+
+function durationToMilliseconds(value: string, fallback: number) {
+  const match = /^(\\d+)(s|m|h|d)$/.exec(value);
+  if (!match) return fallback;
+  const amount = Number(match[1]);
+  const unit = match[2];
+  const multiplier = unit === 's' ? 1_000 : unit === 'm' ? 60_000 : unit === 'h' ? 3_600_000 : 86_400_000;
+  return amount * multiplier;
+}
+
+const accessMaxAge = durationToMilliseconds(process.env.ACCESS_TOKEN_TTL ?? '15m', 15 * 60 * 1000);
+const refreshMaxAge = Number(process.env.REFRESH_TOKEN_TTL_DAYS ?? 7) * 24 * 60 * 60 * 1000;
 
 const baseCookieOptions = {
   httpOnly: true,
@@ -14,8 +24,8 @@ const baseCookieOptions = {
 };
 
 export function setAuthCookies(res: Response, accessToken: string, refreshToken: string) {
-  res.cookie(ACCESS_COOKIE_NAME, accessToken, { ...baseCookieOptions, maxAge: ACCESS_MAX_AGE });
-  res.cookie(REFRESH_COOKIE_NAME, refreshToken, { ...baseCookieOptions, maxAge: REFRESH_MAX_AGE });
+  res.cookie(ACCESS_COOKIE_NAME, accessToken, { ...baseCookieOptions, maxAge: accessMaxAge });
+  res.cookie(REFRESH_COOKIE_NAME, refreshToken, { ...baseCookieOptions, maxAge: refreshMaxAge });
 }
 
 export function getAuthCookie(req: RequestWithCookies) {
