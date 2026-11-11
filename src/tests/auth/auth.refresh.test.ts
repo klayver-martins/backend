@@ -54,6 +54,16 @@ describe('AuthService - Refresh Token', () => {
     await expect(service.refresh(undefined)).rejects.toMatchObject({ statusCode: 401 });
   });
 
+  it('não deve renovar refresh token expirado', async () => {
+    const session = await login();
+    repository.getRefreshTokens()[0].expiresAt = new Date(Date.now() - 1_000);
+
+    await expect(service.refresh(session.refreshToken)).rejects.toMatchObject({
+      statusCode: 401,
+      message: 'Refresh token inválido ou expirado.',
+    });
+  });
+
   it('não deve renovar com refresh token desconhecido', async () => {
     await expect(service.refresh('token-inexistente')).rejects.toMatchObject({ statusCode: 401 });
   });
