@@ -2,6 +2,7 @@ import type { NextFunction, Request, Response } from 'express';
 import type { AuthRepositoryInterface } from '../interfaces/repository/auth-repository.interface.ts';
 import { AuthRepository } from '../repository/auth.repository.ts';
 import { AuthService } from '../service/auth.service.ts';
+import { AppError } from '../utils/app-error.ts';
 import {
   clearAuthCookies,
   getRefreshCookie,
@@ -45,6 +46,7 @@ export class AuthController {
 
       return res.status(200).json({ message: 'Sessão renovada com sucesso.' });
     } catch (error) {
+      if (error instanceof AppError && error.statusCode === 401) clearAuthCookies(res);
       return next(error);
     }
   }
