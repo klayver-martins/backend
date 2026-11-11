@@ -31,6 +31,8 @@ export class AuthRepositoryInMemory implements AuthRepositoryInterface {
     return user;
   }
 
+  getRefreshTokens() { return this.refreshTokens; }
+
   async createRefreshToken(data: { tokenHash: string; userId: number; expiresAt: Date }) {
     this.refreshTokens.push({
       id: this.refreshTokens.length + 1,
