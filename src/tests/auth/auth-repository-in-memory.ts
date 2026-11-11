@@ -53,6 +53,20 @@ export class AuthRepositoryInMemory implements AuthRepositoryInterface {
     return 1;
   }
 
+  async rotateRefreshToken(
+    oldTokenHash: string,
+    revokedAt: Date,
+    newToken: { tokenHash: string; userId: number; expiresAt: Date },
+  ) {
+    const oldToken = this.refreshTokens.find(
+      token => token.tokenHash === oldTokenHash && !token.revokedAt && token.expiresAt > revokedAt,
+    );
+    if (!oldToken) return false;
+    oldToken.revokedAt = revokedAt;
+    await this.createRefreshToken(newToken);
+    return true;
+  }
+
   async revokeAllRefreshTokens(userId: number, revokedAt: Date) {
     for (const token of this.refreshTokens) {
       if (token.userId === userId && !token.revokedAt) token.revokedAt = revokedAt;
