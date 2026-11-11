@@ -5,7 +5,7 @@ const ACCESS_COOKIE_NAME = 'token';
 const REFRESH_COOKIE_NAME = 'refresh_token';
 
 function durationToMilliseconds(value: string, fallback: number) {
-  const match = /^(\\d+)(s|m|h|d)$/.exec(value);
+  const match = /^(\d+)(s|m|h|d)$/.exec(value);
   if (!match) return fallback;
   const amount = Number(match[1]);
   const unit = match[2];
