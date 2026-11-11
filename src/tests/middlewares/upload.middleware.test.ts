@@ -1,23 +1,19 @@
 import express from 'express';
-import fs from 'node:fs/promises';
-import path from 'node:path';
-
 import request from 'supertest';
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
 import { errorMiddleware } from '../../middlewares/error.middleware.ts';
 import { upload } from '../../middlewares/upload.middleware.ts';
-
-const uploadDir = path.resolve(process.cwd(), 'src/uploads');
 
 function createApp() {
   const app = express();
 
   app.post('/upload', upload.single('photo'), (req, res) => {
     return res.status(200).json({
-      filename: req.file?.filename,
+      originalname: req.file?.originalname,
       mimetype: req.file?.mimetype,
       size: req.file?.size,
+      hasBuffer: Buffer.isBuffer(req.file?.buffer),
     });
   });
 
@@ -27,10 +23,6 @@ function createApp() {
 }
 
 describe('Upload Middleware', () => {
-  afterEach(() => {
-    vi.restoreAllMocks();
-  });
-
   it('deve aceitar imagem JPEG', async () => {
     const response = await request(createApp())
       .post('/upload')
@@ -40,10 +32,10 @@ describe('Upload Middleware', () => {
       });
 
     expect(response.status).toBe(200);
-    expect(response.body.filename).toMatch(/\.jpg$/);
+    expect(response.body.originalname).toBe('foto.jpg');
     expect(response.body.mimetype).toBe('image/jpeg');
-
-    await fs.unlink(path.join(uploadDir, response.body.filename));
+    expect(response.body.hasBuffer).toBe(true);
+    expect(response.body.size).toBe(Buffer.from('imagem de teste').length);
   });
 
   it('deve aceitar imagem PNG', async () => {
@@ -55,9 +47,9 @@ describe('Upload Middleware', () => {
       });
 
     expect(response.status).toBe(200);
-    expect(response.body.filename).toMatch(/\.png$/);
-
-    await fs.unlink(path.join(uploadDir, response.body.filename));
+    expect(response.body.originalname).toBe('foto.png');
+    expect(response.body.mimetype).toBe('image/png');
+    expect(response.body.hasBuffer).toBe(true);
   });
 
   it('deve aceitar imagem WEBP', async () => {
@@ -69,9 +61,9 @@ describe('Upload Middleware', () => {
       });
 
     expect(response.status).toBe(200);
-    expect(response.body.filename).toMatch(/\.webp$/);
-
-    await fs.unlink(path.join(uploadDir, response.body.filename));
+    expect(response.body.originalname).toBe('foto.webp');
+    expect(response.body.mimetype).toBe('image/webp');
+    expect(response.body.hasBuffer).toBe(true);
   });
 
   it('deve rejeitar formato de arquivo não permitido', async () => {
@@ -86,8 +78,8 @@ describe('Upload Middleware', () => {
     expect(response.body.message).toBe('Formato de imagem não permitido.');
   });
 
-  it('deve rejeitar arquivos maiores que 5 MB', async () => {
-    const arquivoGrande = Buffer.alloc(5 * 1024 * 1024 + 1);
+  it('deve rejeitar arquivos maiores que 4 MB', async () => {
+    const arquivoGrande = Buffer.alloc(4 * 1024 * 1024 + 1);
 
     const response = await request(createApp()).post('/upload').attach('photo', arquivoGrande, {
       filename: 'foto.jpg',
@@ -96,5 +88,27 @@ describe('Upload Middleware', () => {
 
     expect(response.status).toBe(500);
     expect(response.body.message).toBe('File too large');
+  });
+
+  it('deve aceitar arquivos com exatamente 4 MB', async () => {
+    const arquivo = Buffer.alloc(4 * 1024 * 1024);
+
+    const response = await request(createApp()).post('/upload').attach('photo', arquivo, {
+      filename: 'foto.jpg',
+      contentType: 'image/jpeg',
+    });
+
+    expect(response.status).toBe(200);
+    expect(response.body.size).toBe(4 * 1024 * 1024);
+    expect(response.body.hasBuffer).toBe(true);
+  });
+
+  it('deve continuar a requisição quando nenhum arquivo é enviado', async () => {
+    const response = await request(createApp()).post('/upload');
+
+    expect(response.status).toBe(200);
+    expect(response.body.originalname).toBeUndefined();
+    expect(response.body.mimetype).toBeUndefined();
+    expect(response.body.hasBuffer).toBe(false);
   });
 });
