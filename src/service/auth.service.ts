@@ -5,7 +5,7 @@ import { AppError } from '../utils/app-error.ts';
 import { loginSchema } from '../schemas/login.schema.ts';
 import { registerSchema } from '../schemas/register.schema.ts';
 import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
+import jwt, { type SignOptions } from 'jsonwebtoken';
 
 const ACCESS_TOKEN_TTL = process.env.ACCESS_TOKEN_TTL ?? '15m';
 const REFRESH_TOKEN_TTL_DAYS = Number(process.env.REFRESH_TOKEN_TTL_DAYS ?? 7);
@@ -49,7 +49,7 @@ export class AuthService {
 
   private createTokenPair(userId: number) {
     const accessToken = jwt.sign({ sub: userId }, getJwtSecret(), {
-      expiresIn: ACCESS_TOKEN_TTL as jwt.SignOptions['expiresIn'],
+      expiresIn: ACCESS_TOKEN_TTL as SignOptions['expiresIn'],
     });
     const refreshToken = randomBytes(64).toString('hex');
     return { accessToken, refreshToken };
