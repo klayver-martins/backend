@@ -1,18 +1,21 @@
 import type { NextFunction, Request, Response } from 'express';
 
 import { ProductService } from '../service/product.service.ts';
+import { uploadPhoto } from '../utils/upload-photo.ts';
 
 export class ProductController {
   constructor(private productService: ProductService = new ProductService()) {}
 
   async create(req: Request, res: Response, next: NextFunction) {
     try {
+      const photo = req.file ? await uploadPhoto(req.file) : undefined;
+
       const product = await this.productService.create(
         {
           code: req.body.code,
           description: req.body.description,
           status: req.body.status,
-          photo: req.file ? `uploads/${req.file.filename}` : undefined,
+          photo,
         },
         res.locals.userId,
       );
@@ -49,13 +52,15 @@ export class ProductController {
     try {
       const id = Number(req.params.id);
 
+      const photo = req.file ? await uploadPhoto(req.file) : undefined;
+
       const product = await this.productService.update(
         id,
         {
           code: req.body.code,
           description: req.body.description,
           status: req.body.status,
-          photo: req.file ? `uploads/${req.file.filename}` : undefined,
+          photo,
         },
         res.locals.userId,
       );

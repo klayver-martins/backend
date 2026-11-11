@@ -2,7 +2,6 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import 'dotenv/config';
 import express from 'express';
-import path from 'node:path';
 
 import swaggerUi from 'swagger-ui-express';
 import { swaggerSpec } from './config/swagger.ts';
@@ -13,16 +12,15 @@ const app = express();
 
 app.use(
   cors({
-    origin: process.env.URL_FRONTEND, // endereço do seu frontend
+    origin: process.env.URL_FRONTEND,
     credentials: true,
   }),
 );
 
 app.use(express.json());
 app.use(cookieParser());
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
-app.use('/uploads', express.static(path.resolve(process.cwd(), 'src/uploads')));
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.use(routes);
 

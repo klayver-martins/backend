@@ -62,7 +62,7 @@ export class ProductService {
       throw new AppError('Produto não encontrado.', 404);
     }
 
-    // Remove a foto antiga somente após atualizar o produto.
+    // Exclui a foto antiga somente depois de atualizar o produto.
     if (data.photo !== undefined && product.photo) {
       await deletePhoto(product.photo);
     }
@@ -79,6 +79,7 @@ export class ProductService {
       throw new AppError('Produto não encontrado.', 404);
     }
 
+    // Exclui a foto do Blob depois de excluir o produto.
     await deletePhoto(product.photo);
 
     return true;
@@ -88,6 +89,7 @@ export class ProductService {
     const result = await this.productRepository.findDashboard(userId);
 
     const activeProducts = result.find(item => item.status === true)?._count._all ?? 0;
+
     const inactiveProducts = result.find(item => item.status === false)?._count._all ?? 0;
 
     return {

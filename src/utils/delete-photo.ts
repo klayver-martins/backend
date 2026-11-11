@@ -1,16 +1,17 @@
-import fs from 'node:fs/promises';
-import path from 'node:path';
+import { del } from '@vercel/blob';
 
 export async function deletePhoto(photo: string | null) {
   if (!photo) return;
 
-  const photoPath = path.resolve(process.cwd(), 'src', photo);
+  // Ignora caminhos antigos de arquivos locais.
+  if (!photo.startsWith('https://')) return;
 
-  try {
-    await fs.unlink(photoPath);
-  } catch (error) {
-    if (!(error instanceof Error && 'code' in error && error.code === 'ENOENT')) {
-      throw error;
-    }
+  const photoUrl = new URL(photo);
+
+  // Evita tentar excluir URLs que não pertencem ao Vercel Blob.
+  if (!photoUrl.hostname.endsWith('.blob.vercel-storage.com')) {
+    return;
   }
+
+  await del(photo);
 }
