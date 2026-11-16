@@ -3,11 +3,7 @@ import type { AuthRepositoryInterface } from '../interfaces/repository/auth-repo
 import { AuthRepository } from '../repository/auth.repository.ts';
 import { AuthService } from '../service/auth.service.ts';
 import { AppError } from '../utils/app-error.ts';
-import {
-  clearAuthCookies,
-  getRefreshCookie,
-  setAuthCookies,
-} from '../utils/auth-cookie.ts';
+import { clearAuthCookies, getRefreshCookie, setAuthCookies } from '../utils/auth-cookie.ts';
 
 export class AuthController {
   private authService: AuthService;
@@ -33,6 +29,8 @@ export class AuthController {
       return res.status(200).json({
         message: 'Login realizado com sucesso.',
         user: result.user,
+        token: result.accessToken,
+        refreshToken: result.refreshToken,
       });
     } catch (error) {
       return next(error);
