@@ -15,6 +15,7 @@ export class AuthController {
   async register(req: Request, res: Response, next: NextFunction) {
     try {
       const user = await this.authService.register(req.body);
+
       return res.status(201).json(user);
     } catch (error) {
       return next(error);
@@ -24,6 +25,7 @@ export class AuthController {
   async login(req: Request, res: Response, next: NextFunction) {
     try {
       const result = await this.authService.login(req.body);
+
       setAuthCookies(res, result.accessToken, result.refreshToken);
 
       return res.status(200).json({
@@ -40,25 +42,37 @@ export class AuthController {
   async refresh(req: Request, res: Response, next: NextFunction) {
     try {
       const tokens = await this.authService.refresh(getRefreshCookie(req));
+
       setAuthCookies(res, tokens.accessToken, tokens.refreshToken);
 
-      return res.status(200).json({ message: 'Sessão renovada com sucesso.' });
+      return res.status(200).json({
+        message: 'Sessão renovada com sucesso.',
+        token: tokens.accessToken,
+        refreshToken: tokens.refreshToken,
+      });
     } catch (error) {
-      if (error instanceof AppError && error.statusCode === 401) clearAuthCookies(res);
+      if (error instanceof AppError && error.statusCode === 401) {
+        clearAuthCookies(res);
+      }
+
       return next(error);
     }
   }
 
   async logout(req: Request, res: Response) {
     await this.authService.logout(getRefreshCookie(req));
+
     clearAuthCookies(res);
 
-    return res.status(200).json({ message: 'Logout realizado com sucesso.' });
+    return res.status(200).json({
+      message: 'Logout realizado com sucesso.',
+    });
   }
 
   async me(req: Request, res: Response, next: NextFunction) {
     try {
       const user = await this.authService.me(res.locals.userId);
+
       return res.status(200).json(user);
     } catch (error) {
       return next(error);
