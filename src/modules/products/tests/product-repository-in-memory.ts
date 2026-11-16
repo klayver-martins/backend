@@ -1,5 +1,5 @@
-import type { Product } from '../../../generated/prisma/client.ts';
-import type { CreateProductData, UpdateProductData } from '../../interfaces/Product.ts';
+import type { Product } from '../../../../generated/prisma/client.ts';
+import type { CreateProductData, UpdateProductData } from '../interfaces/Product.ts';
 
 export class ProductRepositoryInMemory {
   private products: Product[] = [];

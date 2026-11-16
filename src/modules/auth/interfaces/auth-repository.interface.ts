@@ -1,4 +1,4 @@
-import type { User } from '../../../generated/prisma/client.ts';
+import type { User } from '../../../../generated/prisma/client.ts';
 
 export type PublicUser = Pick<User, 'id' | 'name' | 'email' | 'createdAt' | 'updatedAt'>;
 
@@ -18,6 +18,10 @@ export interface AuthRepositoryInterface {
   createRefreshToken(data: { tokenHash: string; userId: number; expiresAt: Date }): Promise<void>;
   findRefreshTokenByHash(tokenHash: string): Promise<RefreshTokenRecord | null>;
   revokeRefreshToken(tokenHash: string, revokedAt: Date): Promise<number>;
-  rotateRefreshToken(oldTokenHash: string, revokedAt: Date, newToken: { tokenHash: string; userId: number; expiresAt: Date }): Promise<boolean>;
+  rotateRefreshToken(
+    oldTokenHash: string,
+    revokedAt: Date,
+    newToken: { tokenHash: string; userId: number; expiresAt: Date },
+  ): Promise<boolean>;
   revokeAllRefreshTokens(userId: number, revokedAt: Date): Promise<void>;
 }

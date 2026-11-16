@@ -1,5 +1,5 @@
-import { prisma } from '../config/prisma.ts';
-import type { AuthRepositoryInterface } from '../interfaces/repository/auth-repository.interface.ts';
+import { prisma } from '../../../config/prisma.ts';
+import type { AuthRepositoryInterface } from '../interfaces/auth-repository.interface.ts';
 
 export class AuthRepository implements AuthRepositoryInterface {
   async findByEmail(email: string) {

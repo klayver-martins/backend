@@ -1,8 +1,8 @@
 import type { NextFunction, Request, Response } from 'express';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { ProductController } from '../../controllers/product.controller.ts';
-import { ProductService } from '../../service/product.service.ts';
+import { ProductController } from '../controllers/product.controller.ts';
+import { ProductService } from '../services/product.service.ts';
 import { ProductRepositoryInMemory } from './product-repository-in-memory.ts';
 
 describe('ProductController', () => {

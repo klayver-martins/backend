@@ -1,7 +1,7 @@
 import type { NextFunction, Request, Response } from 'express';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { AuthController } from '../../controllers/auth.controller.ts';
+import { AuthController } from '../controllers/auth.controller.ts';
 import { AuthRepositoryInMemory } from './auth-repository-in-memory.ts';
 
 describe('AuthController', () => {

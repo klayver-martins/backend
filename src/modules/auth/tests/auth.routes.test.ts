@@ -2,8 +2,8 @@ import cookieParser from 'cookie-parser';
 import express, { type Express } from 'express';
 import request from 'supertest';
 import { beforeEach, describe, expect, it } from 'vitest';
-import { AuthController } from '../../controllers/auth.controller.ts';
-import { createAuthRoutes } from '../../routes/auth.routes.ts';
+import { AuthController } from '../controllers/auth.controller.ts';
+import { createAuthRoutes } from '../routes/auth.routes.ts';
 import { AuthRepositoryInMemory } from './auth-repository-in-memory.ts';
 
 describe('AuthRoutes', () => {

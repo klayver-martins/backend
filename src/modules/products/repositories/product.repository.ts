@@ -1,6 +1,6 @@
-import { prisma } from '../config/prisma.ts';
+import { prisma } from '../../../config/prisma.ts';
 import type { CreateProductData, UpdateProductData } from '../interfaces/Product.ts';
-import type { ProductRepositoryInterface } from '../interfaces/repository/product-repository.interface.ts';
+import type { ProductRepositoryInterface } from '../interfaces/product-repository.interface.ts';
 
 export class ProductRepository implements ProductRepositoryInterface {
   async create(data: CreateProductData, userId: number) {

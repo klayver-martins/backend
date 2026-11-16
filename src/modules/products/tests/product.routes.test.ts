@@ -5,10 +5,10 @@ import request from 'supertest';
 
 import { beforeEach, describe, expect, it } from 'vitest';
 
-import { ProductController } from '../../controllers/product.controller.ts';
-import { errorMiddleware } from '../../middlewares/error.middleware.ts';
-import { createProductRoutes } from '../../routes/product.routes.ts';
-import { ProductService } from '../../service/product.service.ts';
+import { errorMiddleware } from '../../../middlewares/error.middleware.ts';
+import { ProductController } from '../controllers/product.controller.ts';
+import { createProductRoutes } from '../routes/product.routes.ts';
+import { ProductService } from '../services/product.service.ts';
 
 import { ProductRepositoryInMemory } from './product-repository-in-memory.ts';
 

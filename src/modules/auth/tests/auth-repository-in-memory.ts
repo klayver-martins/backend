@@ -1,9 +1,9 @@
-import type { User } from '../../../generated/prisma/client.ts';
+import type { User } from '../../../../generated/prisma/client.ts';
 import type {
   AuthRepositoryInterface,
   PublicUser,
   RefreshTokenRecord,
-} from '../../interfaces/repository/auth-repository.interface.ts';
+} from '../interfaces/auth-repository.interface.ts';
 
 export class AuthRepositoryInMemory implements AuthRepositoryInterface {
   private users: User[] = [];
@@ -31,7 +31,9 @@ export class AuthRepositoryInMemory implements AuthRepositoryInterface {
     return user;
   }
 
-  getRefreshTokens() { return this.refreshTokens; }
+  getRefreshTokens() {
+    return this.refreshTokens;
+  }
 
   async createRefreshToken(data: { tokenHash: string; userId: number; expiresAt: Date }) {
     this.refreshTokens.push({

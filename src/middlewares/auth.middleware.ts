@@ -5,7 +5,13 @@ import { AppError } from '../utils/app-error.ts';
 import { getAuthCookie } from '../utils/auth-cookie.ts';
 
 export function authMiddleware(req: Request, res: Response, next: NextFunction) {
-  const token = getAuthCookie(req);
+  const authorization = req.headers.authorization;
+
+  const bearerToken = authorization?.startsWith('Bearer ')
+    ? authorization.slice(7).trim()
+    : undefined;
+
+  const token = bearerToken || getAuthCookie(req);
 
   if (!token) {
     return next(new AppError('Token não informado.', 401));

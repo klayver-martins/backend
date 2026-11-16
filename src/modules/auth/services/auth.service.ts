@@ -1,11 +1,11 @@
-import { createHash, randomBytes } from 'node:crypto';
-import type { AuthRepositoryInterface } from '../interfaces/repository/auth-repository.interface.ts';
-import { AuthRepository } from '../repository/auth.repository.ts';
-import { AppError } from '../utils/app-error.ts';
-import { loginSchema } from '../schemas/login.schema.ts';
-import { registerSchema } from '../schemas/register.schema.ts';
 import bcrypt from 'bcryptjs';
 import jwt, { type SignOptions } from 'jsonwebtoken';
+import { createHash, randomBytes } from 'node:crypto';
+import { AppError } from '../../../utils/app-error.ts';
+import type { AuthRepositoryInterface } from '../interfaces/auth-repository.interface.ts';
+import { AuthRepository } from '../repositories/auth.repository.ts';
+import { loginSchema } from '../schemas/login.schema.ts';
+import { registerSchema } from '../schemas/register.schema.ts';
 
 const ACCESS_TOKEN_TTL = process.env.ACCESS_TOKEN_TTL ?? '15m';
 const REFRESH_TOKEN_TTL_DAYS = Number(process.env.REFRESH_TOKEN_TTL_DAYS ?? 7);

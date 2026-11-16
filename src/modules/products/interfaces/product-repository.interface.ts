@@ -1,5 +1,5 @@
-import type { Product } from '../../../generated/prisma/client.ts';
-import type { CreateProductData, UpdateProductData } from '../Product.ts';
+import type { Product } from '../../../../generated/prisma/client.ts';
+import type { CreateProductData, UpdateProductData } from '../interfaces/Product.ts';
 
 export interface ProductRepositoryInterface {
   create(data: CreateProductData, userId: number): Promise<Product>;

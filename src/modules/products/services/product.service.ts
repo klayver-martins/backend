@@ -1,6 +1,6 @@
-import type { ProductRepositoryInterface } from '../interfaces/repository/product-repository.interface.ts';
+import type { ProductRepositoryInterface } from '../interfaces/product-repository.interface.ts';
 
-import { ProductRepository } from '../repository/product.repository.ts';
+import { ProductRepository } from '../repositories/product.repository.ts';
 import {
   productCreateSchema,
   productIdSchema,
@@ -8,8 +8,8 @@ import {
   type ProductUpdateInput,
 } from '../schemas/product.schema.ts';
 
-import { AppError } from '../utils/app-error.ts';
-import { deletePhoto } from '../utils/delete-photo.ts';
+import { AppError } from '../../../utils/app-error.ts';
+import { deletePhoto } from '../../../utils/delete-photo.ts';
 
 export class ProductService {
   constructor(private productRepository: ProductRepositoryInterface = new ProductRepository()) {}

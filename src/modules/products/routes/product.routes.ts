@@ -1,8 +1,8 @@
 import { Router } from 'express';
 
+import { authMiddleware } from '../../../middlewares/auth.middleware.ts';
+import { upload } from '../../../middlewares/upload.middleware.ts';
 import { ProductController } from '../controllers/product.controller.ts';
-import { authMiddleware } from '../middlewares/auth.middleware.ts';
-import { upload } from '../middlewares/upload.middleware.ts';
 
 export function createProductRoutes(controller: ProductController = new ProductController()) {
   const productRoutes = Router();

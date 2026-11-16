@@ -1,9 +1,9 @@
 import type { NextFunction, Request, Response } from 'express';
-import type { AuthRepositoryInterface } from '../interfaces/repository/auth-repository.interface.ts';
-import { AuthRepository } from '../repository/auth.repository.ts';
-import { AuthService } from '../service/auth.service.ts';
-import { AppError } from '../utils/app-error.ts';
-import { clearAuthCookies, getRefreshCookie, setAuthCookies } from '../utils/auth-cookie.ts';
+import { AppError } from '../../../utils/app-error.ts';
+import { clearAuthCookies, getRefreshCookie, setAuthCookies } from '../../../utils/auth-cookie.ts';
+import type { AuthRepositoryInterface } from '../interfaces/auth-repository.interface.ts';
+import { AuthRepository } from '../repositories/auth.repository.ts';
+import { AuthService } from '../services/auth.service.ts';
 
 export class AuthController {
   private authService: AuthService;
@@ -41,7 +41,9 @@ export class AuthController {
 
   async refresh(req: Request, res: Response, next: NextFunction) {
     try {
-      const tokens = await this.authService.refresh(getRefreshCookie(req));
+      const refreshToken = req.body?.refreshToken ?? getRefreshCookie(req);
+
+      const tokens = await this.authService.refresh(refreshToken);
 
       setAuthCookies(res, tokens.accessToken, tokens.refreshToken);
 
@@ -60,7 +62,9 @@ export class AuthController {
   }
 
   async logout(req: Request, res: Response) {
-    await this.authService.logout(getRefreshCookie(req));
+    const refreshToken = req.body?.refreshToken ?? getRefreshCookie(req);
+
+    await this.authService.logout(refreshToken);
 
     clearAuthCookies(res);
 

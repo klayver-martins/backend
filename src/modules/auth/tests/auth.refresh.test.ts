@@ -1,5 +1,5 @@
-import { describe, expect, it, beforeEach } from 'vitest';
-import { AuthService } from '../../service/auth.service.ts';
+import { beforeEach, describe, expect, it } from 'vitest';
+import { AuthService } from '../services/auth.service.ts';
 import { AuthRepositoryInMemory } from './auth-repository-in-memory.ts';
 
 describe('AuthService - Refresh Token', () => {

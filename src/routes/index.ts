@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import { authRoutes } from './auth.routes.ts';
-import { productRoutes } from './product.routes.ts';
+import { authRoutes } from '../modules/auth/routes/auth.routes.ts';
+import { productRoutes } from '../modules/products/routes/product.routes.ts';
 import { userRoutes } from './user.routes.ts';
 
 const routes = Router();

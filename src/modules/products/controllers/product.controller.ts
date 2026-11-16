@@ -1,7 +1,7 @@
 import type { NextFunction, Request, Response } from 'express';
 
-import { ProductService } from '../service/product.service.ts';
-import { uploadPhoto } from '../utils/upload-photo.ts';
+import { uploadPhoto } from '../../../utils/upload-photo.ts';
+import { ProductService } from '../services/product.service.ts';
 
 export class ProductController {
   constructor(private productService: ProductService = new ProductService()) {}
